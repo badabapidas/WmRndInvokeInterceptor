@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
     <jar path="C:/SoftwareAG_107/IntegrationServer/instances/default/packages/Bada/code/jars/static/invoke-interceptor.jar"/>
-    <options buildIfNeeded="true" compress="true" descriptionLocation="/WmRnDInvokeInterceptor/exportJarToWm107TestPackage.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/WmE2ERnDInvokeInterceptor/exportJarToWm107TestPackage.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
     <manifest generateManifest="true" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
@@ -11,11 +11,11 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=WmRnDInvokeInterceptor/src"/>
-        <file path="/WmRnDInvokeInterceptor/.gitignore"/>
-        <file path="/WmRnDInvokeInterceptor/README.md"/>
-        <file path="/WmRnDInvokeInterceptor/.classpath"/>
-        <file path="/WmRnDInvokeInterceptor/.project"/>
-        <file path="/WmRnDInvokeInterceptor/exportJarToWm107TestPackage.jardesc"/>
+        <javaElement handleIdentifier="=WmE2ERnDInvokeInterceptor/src"/>
+        <file path="/WmE2ERnDInvokeInterceptor/.gitignore"/>
+        <file path="/WmE2ERnDInvokeInterceptor/README.md"/>
+        <file path="/WmE2ERnDInvokeInterceptor/.classpath"/>
+        <file path="/WmE2ERnDInvokeInterceptor/.project"/>
+        <file path="/WmE2ERnDInvokeInterceptor/exportJarToWm107TestPackage.jardesc"/>
     </selectedElements>
 </jardesc>
