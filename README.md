@@ -1,6 +1,6 @@
 ## WmRndInvokeInterceptor
 
-To know more about this project please visit [here](https://raw.githubusercontent.com/johnpcarter/WmRndInvokeInterceptor)
+To know more about this project please visit [here](https://github.com/johnpcarter/WmRndInvokeInterceptor)
 
 
 # Setup
