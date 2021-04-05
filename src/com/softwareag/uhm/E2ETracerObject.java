@@ -41,7 +41,6 @@ public class E2ETracerObject {
 	public static void startEntrySpan(String tenantId, String operationName, String stage, String injectKey) {
 		if (isE2EConfigured()) {
 			try {
-				System.out.println("[E2E] start entry span ");
 				ContextCarrier contextCarrier = new ContextCarrier();
 				CarrierItem contextCarrierItem = contextCarrier.items();
 				while (contextCarrierItem.hasNext()) {
@@ -61,11 +60,10 @@ public class E2ETracerObject {
 	public static void startLocalSpan(String operationName) {
 		if (isE2EConfigured()) {
 			try {
-				System.out.println("[E2E] start local entry span ");
 				AbstractSpan span = ContextManager.createLocalSpan("/integration/" + operationName);
 				Tags.UHM.OPERATION_NAME.set(span, operationName);
 				Tags.UHM.TENANT_ID.set(span, "localSpanTenent");
-				System.out.println("Created the local Entry span..." + operationName);
+				System.out.println("-> Created the local Entry span..." + operationName);
 			} catch (Exception e) {
 				System.out
 						.println("Error while creating local span for " + operationName + ", error:" + e.getMessage());
@@ -148,6 +146,7 @@ public class E2ETracerObject {
 				}
 			} catch (Exception e) {
 				System.out.println("E2E agent not configured");
+				IS_E2E_AGENT_LOADED = false;
 			}
 		}
 		return IS_E2E_AGENT_LOADED;
