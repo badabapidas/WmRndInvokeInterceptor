@@ -5,42 +5,28 @@
  */
 package com.softwareag.uhm;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.skywalking.apm.agent.core.conf.Config;
 import org.apache.skywalking.apm.agent.core.context.CarrierItem;
 import org.apache.skywalking.apm.agent.core.context.ContextCarrier;
 import org.apache.skywalking.apm.agent.core.context.ContextManager;
+import org.apache.skywalking.apm.agent.core.context.SW6CarrierItem;
 import org.apache.skywalking.apm.agent.core.context.tag.Tags;
 import org.apache.skywalking.apm.agent.core.context.trace.AbstractSpan;
 
+import com.wm.net.HttpHeader;
+
 public class E2ETracerObject {
-	// private static String tenantId;
-	// private static String operationName;
-	// private static String stage;
-	// private Map<String, Object> payloads = new HashMap<>();
-	// private E2ETracerObject instance;
 	private static boolean IS_E2E_AGENT_LOADED = false;
-
-	// public E2ETracerObject createInstance(String tenantId, String
-	// operationName, String stage) {
-	// instance = new E2ETracerObject(tenantId, operationName, stage);
-	// System.out.println("[E2E] trace object created ");
-	// return instance;
-	// }
-
-	// public E2ETracerObject(String tenantId, String operationName, String
-	// stage) {
-	// this.tenantId = tenantId;
-	// this.operationName = operationName;
-	// this.stage = stage;
-	// System.out.println("[E2E] trace object created ");
-	// }
+	private static List<String> RCP_SERVICE_LISTS = new ArrayList<>();
 
 	public static void startEntrySpan(String tenantId, String operationName, String stage, String injectKey) {
 		if (isE2EConfigured()) {
 			try {
+				System.out.println("sw6 found from parent: " + injectKey);
 				ContextCarrier contextCarrier = new ContextCarrier();
 				CarrierItem contextCarrierItem = contextCarrier.items();
 				while (contextCarrierItem.hasNext()) {
@@ -57,6 +43,10 @@ public class E2ETracerObject {
 		}
 	}
 
+	private static void updateRcpServices() {
+		RCP_SERVICE_LISTS.add("pub.client:http");
+	}
+
 	public static void startLocalSpan(String operationName) {
 		if (isE2EConfigured()) {
 			try {
@@ -69,6 +59,35 @@ public class E2ETracerObject {
 						.println("Error while creating local span for " + operationName + ", error:" + e.getMessage());
 			}
 		}
+	}
+
+	public static boolean isAValidRcpServiceCall(String serviceName) {
+		if (RCP_SERVICE_LISTS.contains(serviceName)) {
+			return true;
+		}
+		return false;
+
+	}
+
+	public static HttpHeader startExitSpan(String opName, HttpHeader header) {
+		if (isE2EConfigured()) {
+			try {
+				ContextCarrier contextCarrier = new ContextCarrier();
+				ContextManager.createExitSpan("HttpReqLeavingIS", contextCarrier, "localhost:5555");
+				CarrierItem next = contextCarrier.items();
+				while (next.hasNext()) {
+					next = next.next();
+					String key = next.getHeadKey();
+					String value = next.getHeadValue();
+					header.addField(SW6CarrierItem.HEADER_NAME, value);
+				}
+				System.out.println("Created the Exit span..." + opName);
+				ContextManager.stopSpan();
+			} catch (Exception e) {
+				System.out.println("Error while creating exit span for " + opName + ", error:" + e.getMessage());
+			}
+		}
+		return header;
 	}
 
 	public static boolean isActiveSpan() {
@@ -88,6 +107,15 @@ public class E2ETracerObject {
 			} else {
 				Tags.UHM.COMPONENT.set(span, "");
 			}
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	public static void populateBuisnessData(Map<String, Object> businessData) {
+		AbstractSpan span = ContextManager.activeSpan();
+		for (Map.Entry m : businessData.entrySet()) {
+			System.out.println("->" + m.getKey().toString() + " " + (String) m.getValue());
+			span.tag(m.getKey().toString(), (String) m.getValue());
 		}
 	}
 
@@ -143,6 +171,7 @@ public class E2ETracerObject {
 				if (cls != null) {
 					System.out.println("E2E agent is configured");
 					IS_E2E_AGENT_LOADED = true;
+					updateRcpServices();
 				}
 			} catch (Exception e) {
 				System.out.println("E2E agent not configured");
