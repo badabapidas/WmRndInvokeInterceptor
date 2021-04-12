@@ -254,8 +254,8 @@ public class InvokeInterceptor implements InvokeChainProcessor {
 		} else if (baseService.getAuditOption() == BaseService.AUDIT_ENABLE
 				&& baseService.getAuditSettings().isStartAuditEnabled()) {
 
-			System.out.println("Processing start " + serviceName + " / " + traceId + " - " + rootContextId + "-"
-					+ parentContextId + "-" + currentContextId);
+			System.out.println("Processing start " + serviceName + " / " + traceId + " - RCID: " + rootContextId
+					+ "- PCID: " + parentContextId + "- CCID: " + currentContextId);
 			String[][] businessDataKeys = baseService.getInputAuditFields();
 			Map<String, Object> businessData = extractDataFromPipeline(businessDataKeys, pipeline);
 			// System.out.println("no of keys: " + businessData.size());
@@ -346,8 +346,8 @@ public class InvokeInterceptor implements InvokeChainProcessor {
 
 			String customContextId = getCustomContextId();
 
-			System.out.println("Processing completion " + serviceName + " / " + traceId + " - " + rootContextId + " : "
-					+ customContextId + "," + currentContextId);
+			System.out.println("Processing completion " + serviceName + " / " + traceId + " - RCID: " + rootContextId
+					+ " : " + customContextId + ", PCID:" + parentContextId + ", CCID:" + currentContextId);
 			String[][] businessDataKeys = baseService.getOutputAuditFields();
 			Map<String, Object> businessData = extractDataFromPipeline(businessDataKeys, pipeline);
 			System.out.println("no of keys: " + businessData.size());
@@ -471,7 +471,7 @@ public class InvokeInterceptor implements InvokeChainProcessor {
 			return Service.getCurrentActivationID();
 		} else {
 
-			return InvokeInterceptor_old.getContextIDsForService()[2];
+			return InvokeInterceptor.getContextIDsForService()[2];
 		}
 	}
 
