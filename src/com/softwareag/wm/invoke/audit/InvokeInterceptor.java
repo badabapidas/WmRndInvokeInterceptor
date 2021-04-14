@@ -130,12 +130,10 @@ public class InvokeInterceptor implements InvokeChainProcessor {
 						pipeline, status);
 			}
 		} catch (InvokeException error) {
-
-			// service exceptions arrive here
 			chainPostProcessor(rootContextId, name, baseService, pipeline, error);
-
 			throw new ServiceException(error);
 		} catch (ServerException error) {
+			chainPostProcessor(rootContextId, name, baseService, pipeline, error);
 			throw new ServiceException(error);
 		}
 	}
@@ -377,13 +375,17 @@ public class InvokeInterceptor implements InvokeChainProcessor {
 	*
 	*/
 	protected void chainPostProcessor(String integrationId, String serviceName, BaseService baseService, IData pipeline,
-			InvokeException e) {
+			Exception e) {
 
 		// TODO: report here!
 
 		if (baseService.getAuditOption() == BaseService.AUDIT_ENABLE
 				&& baseService.getAuditSettings().isErrorAuditEnabled()) {
 			System.out.println("Processing error " + serviceName + " / " + integrationId);
+			if (E2ETracerObject.isActiveSpan()) {
+				E2ETracerObject.updateErrorStatus(UhmTransactionStatus.FAIL, e.getMessage());
+				E2ETracerObject.stopSpan(serviceName);
+			}
 		}
 	}
 
